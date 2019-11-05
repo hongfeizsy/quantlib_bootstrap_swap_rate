@@ -8,6 +8,8 @@ int main() {
 	QuantLib::DayCounter day_counter = QuantLib::ActualActual();
 	QuantLib::Calendar calendar = QuantLib::TARGET();
 	//std::cout << calendar.isBusinessDay(today - 2) << std::endl;
+	QuantLib::Date settlement_date = today + 2;
+	//QuantLib::Date settlement_date = calendar.advance(today, QuantLib::Period(2, QuantLib::Days));
 
 	return 0;
 }

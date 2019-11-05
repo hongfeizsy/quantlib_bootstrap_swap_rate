@@ -10,6 +10,11 @@ int main() {
 	//std::cout << calendar.isBusinessDay(today - 2) << std::endl;
 	QuantLib::Date settlement_date = today + 2;
 	//QuantLib::Date settlement_date = calendar.advance(today, QuantLib::Period(2, QuantLib::Days));
+	QuantLib::Natural settlement_days = settlement_date - today;
+	QuantLib::Settings::instance().evaluationDate() = today;
+	
+	QuantLib::RelinkableHandle<QuantLib::YieldTermStructure> discount_curve;
+	QuantLib::RelinkableHandle<QuantLib::YieldTermStructure> projection_curve;
 
 	return 0;
 }

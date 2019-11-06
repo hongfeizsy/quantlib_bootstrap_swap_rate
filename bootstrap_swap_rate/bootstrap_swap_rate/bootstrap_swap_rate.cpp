@@ -16,6 +16,25 @@ int main() {
 	QuantLib::RelinkableHandle<QuantLib::YieldTermStructure> discount_curve;
 	QuantLib::RelinkableHandle<QuantLib::YieldTermStructure> projection_curve;
 
+	boost::shared_ptr<QuantLib::Eonia> eonian_index = boost::make_shared<QuantLib::Eonia>();   // Remember to try keyword of new!!!
+	boost::shared_ptr<QuantLib::Euribor6M> euribor_index = boost::make_shared<QuantLib::Euribor6M>(projection_curve);
+	
+	std::vector<boost::shared_ptr<QuantLib::RateHelper>> rate_helpers;
+	std::cout << eonian_index->dayCounter() << std::endl;
+
+
+	std::map<QuantLib::Period, QuantLib::Real> eonia_swap_data;
+	eonia_swap_data.insert(std::pair<QuantLib::Period, QuantLib::Real>(QuantLib::Period(6, QuantLib::Months), -0.00353));
+	eonia_swap_data.insert(std::pair<QuantLib::Period, QuantLib::Real>(QuantLib::Period(1, QuantLib::Years), -0.00331));
+	eonia_swap_data.insert(std::pair<QuantLib::Period, QuantLib::Real>(QuantLib::Period(2, QuantLib::Years), -0.00248));
+	eonia_swap_data.insert(std::pair<QuantLib::Period, QuantLib::Real>(QuantLib::Period(3, QuantLib::Years), -0.00138));
+	eonia_swap_data.insert(std::pair<QuantLib::Period, QuantLib::Real>(QuantLib::Period(4, QuantLib::Years), -0.0001245));
+	eonia_swap_data.insert(std::pair<QuantLib::Period, QuantLib::Real>(QuantLib::Period(5, QuantLib::Years), 0.0011945));
+	eonia_swap_data.insert(std::pair<QuantLib::Period, QuantLib::Real>(QuantLib::Period(7, QuantLib::Years), 0.00387));
+	eonia_swap_data.insert(std::pair<QuantLib::Period, QuantLib::Real>(QuantLib::Period(10, QuantLib::Years), 0.007634));	
+	//std::cout << eonia_swap_data.find(QuantLib::Period(6, QuantLib::Months))->first << " and " << 
+	//	eonia_swap_data.find(QuantLib::Period(6, QuantLib::Months))->second << std::endl;
+
 	return 0;
 }
 

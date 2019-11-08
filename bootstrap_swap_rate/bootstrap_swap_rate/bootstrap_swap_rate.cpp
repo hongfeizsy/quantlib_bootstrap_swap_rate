@@ -43,16 +43,16 @@ int main() {
 				QuantLib::Handle<QuantLib::Quote>(boost::make_shared<QuantLib::SimpleQuote>(data.second)), eonian_index));
 		});
 	
-	
 	boost::shared_ptr<QuantLib::PiecewiseYieldCurve<QuantLib::Discount, QuantLib::LogLinear>> eonian_curve =
 		boost::make_shared<QuantLib::PiecewiseYieldCurve<QuantLib::Discount, QuantLib::LogLinear>>(0, eonian_index->fixingCalendar(), rate_helpers, eonian_index->dayCounter());
 	//boost::shared_ptr<QuantLib::PiecewiseYieldCurve<QuantLib::Discount, QuantLib::LogLinear>> eonian_curve(
 	//	new QuantLib::PiecewiseYieldCurve<QuantLib::Discount, QuantLib::LogLinear>(0, eonian_index->fixingCalendar(), rate_helpers, eonian_index->dayCounter()));
 	eonian_curve->enableExtrapolation(true);
-
-
-
-
+	discount_curve.linkTo(eonian_curve);
+	std::cout << rate_helpers.capacity() << std::endl;
+	// clear rate_helpers containers???
+	rate_helpers.clear();
+	std::cout << rate_helpers.capacity() << std::endl;
 
 	
 	return 0;

@@ -22,8 +22,8 @@ int main() {
 	std::vector<boost::shared_ptr<QuantLib::RateHelper>> rate_helpers;
 	//std::cout << eonian_index->dayCounter() << std::endl;
 	rate_helpers.push_back(boost::make_shared<QuantLib::DepositRateHelper>(QuantLib::Handle<QuantLib::Quote>(boost::make_shared<QuantLib::SimpleQuote>(-0.0036)), 
-		QuantLib::Period(1, QuantLib::Days), euribor_index->fixingDays(), euribor_index->fixingCalendar(), euribor_index->businessDayConvention(), euribor_index->endOfMonth(), 
-		euribor_index->dayCounter()));
+		QuantLib::Period(1, QuantLib::Days), eonian_index->fixingDays(), eonian_index->fixingCalendar(), eonian_index->businessDayConvention(), eonian_index->endOfMonth(), 
+		eonian_index->dayCounter()));
 
 	std::map<QuantLib::Period, QuantLib::Real> eonia_swap_data;
 	eonia_swap_data.insert(std::pair<QuantLib::Period, QuantLib::Real>(QuantLib::Period(6, QuantLib::Months), -0.00353));
@@ -50,9 +50,15 @@ int main() {
 	eonian_curve->enableExtrapolation(true);
 	discount_curve.linkTo(eonian_curve);
 	std::cout << rate_helpers.capacity() << std::endl;
-	// clear rate_helpers containers???
-	rate_helpers.clear();
+	
+	rate_helpers.clear();    // clear rate_helpers containers???
 	std::cout << rate_helpers.capacity() << std::endl;
+
+	// euribor curve
+	// cash part
+	rate_helpers.push_back(boost::make_shared<QuantLib::DepositRateHelper>(QuantLib::Handle<QuantLib::Quote>(boost::make_shared<QuantLib::SimpleQuote>(-0.00273)), 
+		QuantLib::Period(6, QuantLib::Months), settlement_days, calendar, euribor_index->businessDayConvention(), 
+		euribor_index->endOfMonth(), euribor_index->dayCounter()));
 
 	
 	return 0;

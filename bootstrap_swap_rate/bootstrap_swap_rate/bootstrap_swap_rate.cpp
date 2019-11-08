@@ -20,8 +20,10 @@ int main() {
 	boost::shared_ptr<QuantLib::Euribor6M> euribor_index = boost::make_shared<QuantLib::Euribor6M>(projection_curve);
 	
 	std::vector<boost::shared_ptr<QuantLib::RateHelper>> rate_helpers;
-	std::cout << eonian_index->dayCounter() << std::endl;
-
+	//std::cout << eonian_index->fixingDays() << std::endl;
+	rate_helpers.push_back(boost::make_shared<QuantLib::DepositRateHelper>(QuantLib::Handle<QuantLib::Quote>(boost::make_shared<QuantLib::SimpleQuote>(-0.0036)), 
+		QuantLib::Period(1, QuantLib::Days), eonian_index->fixingDays(), eonian_index->fixingCalendar(), eonian_index->businessDayConvention(), eonian_index->endOfMonth(), 
+		eonian_index->dayCounter()));
 
 	std::map<QuantLib::Period, QuantLib::Real> eonia_swap_data;
 	eonia_swap_data.insert(std::pair<QuantLib::Period, QuantLib::Real>(QuantLib::Period(6, QuantLib::Months), -0.00353));
@@ -34,6 +36,13 @@ int main() {
 	eonia_swap_data.insert(std::pair<QuantLib::Period, QuantLib::Real>(QuantLib::Period(10, QuantLib::Years), 0.007634));	
 	//std::cout << eonia_swap_data.find(QuantLib::Period(6, QuantLib::Months))->first << " and " << 
 	//	eonia_swap_data.find(QuantLib::Period(6, QuantLib::Months))->second << std::endl;
+	
+	std::for_each(eonia_swap_data.begin(), eonia_swap_data.end(),
+		[settlement_days, &rate_helpers, eonian_index] (std::pair<QuantLib::Period, QuantLib::Real> data) -> void {
+			rate_helpers.push_back(boost::make_shared<QuantLib::OISRateHelper>(settlement_days, data.first, 
+				QuantLib::Handle<QuantLib::Quote>(boost::make_shared<QuantLib::SimpleQuote>(data.second)), eonian_index));
+		});
+
 
 	return 0;
 }

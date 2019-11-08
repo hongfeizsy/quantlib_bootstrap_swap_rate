@@ -20,7 +20,7 @@ int main() {
 	boost::shared_ptr<QuantLib::Euribor6M> euribor_index = boost::make_shared<QuantLib::Euribor6M>(projection_curve);
 	
 	std::vector<boost::shared_ptr<QuantLib::RateHelper>> rate_helpers;
-	//std::cout << eonian_index->fixingDays() << std::endl;
+	std::cout << eonian_index->fixingCalendar() << std::endl;
 	rate_helpers.push_back(boost::make_shared<QuantLib::DepositRateHelper>(QuantLib::Handle<QuantLib::Quote>(boost::make_shared<QuantLib::SimpleQuote>(-0.0036)), 
 		QuantLib::Period(1, QuantLib::Days), eonian_index->fixingDays(), eonian_index->fixingCalendar(), eonian_index->businessDayConvention(), eonian_index->endOfMonth(), 
 		eonian_index->dayCounter()));
@@ -42,6 +42,10 @@ int main() {
 			rate_helpers.push_back(boost::make_shared<QuantLib::OISRateHelper>(settlement_days, data.first, 
 				QuantLib::Handle<QuantLib::Quote>(boost::make_shared<QuantLib::SimpleQuote>(data.second)), eonian_index));
 		});
+	
+
+	boost::shared_ptr<QuantLib::PiecewiseYieldCurve<QuantLib::Discount, QuantLib::LogLinear>> eonian_curve =
+		boost::make_shared<QuantLib::PiecewiseYieldCurve<QuantLib::Discount, QuantLib::LogLinear>>(today, rate_helpers, QuantLib::Actual360());
 
 
 	return 0;

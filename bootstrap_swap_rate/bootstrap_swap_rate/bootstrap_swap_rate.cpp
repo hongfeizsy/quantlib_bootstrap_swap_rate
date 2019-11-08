@@ -1,6 +1,6 @@
 #include <iostream>
-#include <ql/quantlib.hpp>
 #include <map>
+#include <ql/quantlib.hpp>
 #pragma warning(disable: 4819)
 
 int main() {
@@ -20,10 +20,10 @@ int main() {
 	boost::shared_ptr<QuantLib::Euribor6M> euribor_index = boost::make_shared<QuantLib::Euribor6M>(projection_curve);
 	
 	std::vector<boost::shared_ptr<QuantLib::RateHelper>> rate_helpers;
-	std::cout << eonian_index->fixingCalendar() << std::endl;
+	//std::cout << eonian_index->dayCounter() << std::endl;
 	rate_helpers.push_back(boost::make_shared<QuantLib::DepositRateHelper>(QuantLib::Handle<QuantLib::Quote>(boost::make_shared<QuantLib::SimpleQuote>(-0.0036)), 
-		QuantLib::Period(1, QuantLib::Days), eonian_index->fixingDays(), eonian_index->fixingCalendar(), eonian_index->businessDayConvention(), eonian_index->endOfMonth(), 
-		eonian_index->dayCounter()));
+		QuantLib::Period(1, QuantLib::Days), euribor_index->fixingDays(), euribor_index->fixingCalendar(), euribor_index->businessDayConvention(), euribor_index->endOfMonth(), 
+		euribor_index->dayCounter()));
 
 	std::map<QuantLib::Period, QuantLib::Real> eonia_swap_data;
 	eonia_swap_data.insert(std::pair<QuantLib::Period, QuantLib::Real>(QuantLib::Period(6, QuantLib::Months), -0.00353));
@@ -43,11 +43,18 @@ int main() {
 				QuantLib::Handle<QuantLib::Quote>(boost::make_shared<QuantLib::SimpleQuote>(data.second)), eonian_index));
 		});
 	
-
+	
 	boost::shared_ptr<QuantLib::PiecewiseYieldCurve<QuantLib::Discount, QuantLib::LogLinear>> eonian_curve =
-		boost::make_shared<QuantLib::PiecewiseYieldCurve<QuantLib::Discount, QuantLib::LogLinear>>(today, rate_helpers, QuantLib::Actual360());
+		boost::make_shared<QuantLib::PiecewiseYieldCurve<QuantLib::Discount, QuantLib::LogLinear>>(0, eonian_index->fixingCalendar(), rate_helpers, eonian_index->dayCounter());
+	//boost::shared_ptr<QuantLib::PiecewiseYieldCurve<QuantLib::Discount, QuantLib::LogLinear>> eonian_curve(
+	//	new QuantLib::PiecewiseYieldCurve<QuantLib::Discount, QuantLib::LogLinear>(0, eonian_index->fixingCalendar(), rate_helpers, eonian_index->dayCounter()));
+	eonian_curve->enableExtrapolation(true);
 
 
+
+
+
+	
 	return 0;
 }
 

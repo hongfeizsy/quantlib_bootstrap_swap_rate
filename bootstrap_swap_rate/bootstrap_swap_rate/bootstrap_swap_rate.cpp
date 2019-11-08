@@ -38,7 +38,7 @@ int main() {
 	//	eonia_swap_data.find(QuantLib::Period(6, QuantLib::Months))->second << std::endl;
 	
 	std::for_each(eonia_swap_data.begin(), eonia_swap_data.end(),
-		[settlement_days, &rate_helpers, eonian_index] (std::pair<QuantLib::Period, QuantLib::Real> data) -> void {
+		[settlement_days, &rate_helpers, eonian_index] (std::pair<QuantLib::Period, QuantLib::Real> data) {
 			rate_helpers.push_back(boost::make_shared<QuantLib::OISRateHelper>(settlement_days, data.first, 
 				QuantLib::Handle<QuantLib::Quote>(boost::make_shared<QuantLib::SimpleQuote>(data.second)), eonian_index));
 		});

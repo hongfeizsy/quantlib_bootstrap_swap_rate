@@ -72,23 +72,23 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\Hongfei\Desktop\Work\CppPackages\QuantLib-1.14;C:\Users\Hongfei\Desktop\Work\CppPackages\boost_1_69_0;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Hongfei\Desktop\Work\CppPackages\QuantLib-1.14\lib;C:\Users\Hongfei\Desktop\Work\CppPackages\boost_1_69_0\lib64-msvc-14.1;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Hongfei\Desktop\Work\cpp\Packages\QuantLib-1.14;C:\Users\Hongfei\Desktop\Work\cpp\Packages\boost_1_69_0;C:\Users\Hongfei\Desktop\Work\CppPackages\QuantLib-1.14;C:\Users\Hongfei\Desktop\Work\CppPackages\boost_1_69_0;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Hongfei\Desktop\Work\cpp\Packages\QuantLib-1.14\lib;C:\Users\Hongfei\Desktop\Work\cpp\Packages\boost_1_69_0\lib64-msvc-14.1;C:\Users\Hongfei\Desktop\Work\CppPackages\QuantLib-1.14\lib;C:\Users\Hongfei\Desktop\Work\CppPackages\boost_1_69_0\lib64-msvc-14.1;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\Hongfei\Desktop\Work\CppPackages\QuantLib-1.14;C:\Users\Hongfei\Desktop\Work\CppPackages\boost_1_69_0;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Hongfei\Desktop\Work\CppPackages\QuantLib-1.14\lib;C:\Users\Hongfei\Desktop\Work\CppPackages\boost_1_69_0\lib64-msvc-14.1;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Hongfei\Desktop\Work\cpp\Packages\QuantLib-1.14;C:\Users\Hongfei\Desktop\Work\cpp\Packages\boost_1_69_0;C:\Users\Hongfei\Desktop\Work\CppPackages\QuantLib-1.14;C:\Users\Hongfei\Desktop\Work\CppPackages\boost_1_69_0;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Hongfei\Desktop\Work\cpp\Packages\QuantLib-1.14\lib;C:\Users\Hongfei\Desktop\Work\cpp\Packages\boost_1_69_0\lib64-msvc-14.1;C:\Users\Hongfei\Desktop\Work\CppPackages\QuantLib-1.14\lib;C:\Users\Hongfei\Desktop\Work\CppPackages\boost_1_69_0\lib64-msvc-14.1;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Users\Hongfei\Desktop\Work\CppPackages\QuantLib-1.14;C:\Users\Hongfei\Desktop\Work\CppPackages\boost_1_69_0;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Hongfei\Desktop\Work\CppPackages\QuantLib-1.14\lib;C:\Users\Hongfei\Desktop\Work\CppPackages\boost_1_69_0\lib64-msvc-14.1;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Hongfei\Desktop\Work\cpp\Packages\QuantLib-1.14;C:\Users\Hongfei\Desktop\Work\cpp\Packages\boost_1_69_0;C:\Users\Hongfei\Desktop\Work\CppPackages\QuantLib-1.14;C:\Users\Hongfei\Desktop\Work\CppPackages\boost_1_69_0;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Hongfei\Desktop\Work\cpp\Packages\QuantLib-1.14\lib;C:\Users\Hongfei\Desktop\Work\cpp\Packages\boost_1_69_0\lib64-msvc-14.1;C:\Users\Hongfei\Desktop\Work\CppPackages\QuantLib-1.14\lib;C:\Users\Hongfei\Desktop\Work\CppPackages\boost_1_69_0\lib64-msvc-14.1;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Users\Hongfei\Desktop\Work\CppPackages\QuantLib-1.14;C:\Users\Hongfei\Desktop\Work\CppPackages\boost_1_69_0;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Hongfei\Desktop\Work\CppPackages\QuantLib-1.14\lib;C:\Users\Hongfei\Desktop\Work\CppPackages\boost_1_69_0\lib64-msvc-14.1;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Hongfei\Desktop\Work\cpp\Packages\QuantLib-1.14;C:\Users\Hongfei\Desktop\Work\cpp\Packages\boost_1_69_0;C:\Users\Hongfei\Desktop\Work\CppPackages\QuantLib-1.14;C:\Users\Hongfei\Desktop\Work\CppPackages\boost_1_69_0;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Hongfei\Desktop\Work\cpp\Packages\QuantLib-1.14\lib;C:\Users\Hongfei\Desktop\Work\cpp\Packages\boost_1_69_0\lib64-msvc-14.1;C:\Users\Hongfei\Desktop\Work\CppPackages\QuantLib-1.14\lib;C:\Users\Hongfei\Desktop\Work\CppPackages\boost_1_69_0\lib64-msvc-14.1;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

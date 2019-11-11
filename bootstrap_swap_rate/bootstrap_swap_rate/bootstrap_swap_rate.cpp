@@ -103,7 +103,7 @@ int main() {
 	QuantLib::Schedule floating_schedule(pastSettlementDate, pastSettlementDate + QuantLib::Period(5, QuantLib::Years), QuantLib::Period(QuantLib::Semiannual), 
 		calendar, QuantLib::Unadjusted, QuantLib::Unadjusted, QuantLib::DateGeneration::Backward, false);
 
-	//QuantLib::VanillaSwap swap();
+	QuantLib::VanillaSwap swap(QuantLib::VanillaSwap::Payer, 10000000.0, fixed_schedule, 0.0285, day_counter, floating_schedule, euribor_index);
 
 	return 0;
 }

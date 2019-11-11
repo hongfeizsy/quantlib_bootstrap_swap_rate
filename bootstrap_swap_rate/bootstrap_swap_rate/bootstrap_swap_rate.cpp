@@ -49,10 +49,10 @@ int main() {
 	//	new QuantLib::PiecewiseYieldCurve<QuantLib::Discount, QuantLib::LogLinear>(0, eonian_index->fixingCalendar(), rate_helpers, eonian_index->dayCounter()));
 	eonian_curve->enableExtrapolation(true);
 	discount_curve.linkTo(eonian_curve);
-	std::cout << rate_helpers.capacity() << std::endl;
+	//std::cout << rate_helpers.capacity() << std::endl;
 	
 	rate_helpers.clear();    // clear rate_helpers containers???
-	std::cout << rate_helpers.capacity() << std::endl;
+	//std::cout << rate_helpers.capacity() << std::endl;
 
 	// euribor curve
 	// cash part
@@ -60,7 +60,51 @@ int main() {
 		QuantLib::Period(6, QuantLib::Months), settlement_days, calendar, euribor_index->businessDayConvention(), 
 		euribor_index->endOfMonth(), euribor_index->dayCounter()));
 
+	// fra part
+	rate_helpers.push_back(boost::make_shared<QuantLib::FraRateHelper>(QuantLib::Handle<QuantLib::Quote>(boost::make_shared<QuantLib::SimpleQuote>(-0.00194)), 
+		QuantLib::Period(6, QuantLib::Months), euribor_index));
 	
+	// swap part
+	rate_helpers.push_back(boost::make_shared<QuantLib::SwapRateHelper>(QuantLib::Handle<QuantLib::Quote>(boost::make_shared<QuantLib::SimpleQuote>(-0.00119)), 
+		QuantLib::Period(2, QuantLib::Years), calendar, QuantLib::Annual, QuantLib::ModifiedFollowing, QuantLib::Actual360(), euribor_index, 
+		QuantLib::Handle<QuantLib::Quote>(), QuantLib::Period(0, QuantLib::Days), discount_curve));
+
+	rate_helpers.push_back(boost::make_shared<QuantLib::SwapRateHelper>(QuantLib::Handle<QuantLib::Quote>(boost::make_shared<QuantLib::SimpleQuote>(0.00019)),
+		QuantLib::Period(3, QuantLib::Years), calendar, QuantLib::Annual, QuantLib::ModifiedFollowing, QuantLib::Actual360(), euribor_index,
+		QuantLib::Handle<QuantLib::Quote>(), QuantLib::Period(0, QuantLib::Days), discount_curve));
+
+	rate_helpers.push_back(boost::make_shared<QuantLib::SwapRateHelper>(QuantLib::Handle<QuantLib::Quote>(boost::make_shared<QuantLib::SimpleQuote>(0.00167)),
+		QuantLib::Period(4, QuantLib::Years), calendar, QuantLib::Annual, QuantLib::ModifiedFollowing, QuantLib::Actual360(), euribor_index,
+		QuantLib::Handle<QuantLib::Quote>(), QuantLib::Period(0, QuantLib::Days), discount_curve));
+
+	rate_helpers.push_back(boost::make_shared<QuantLib::SwapRateHelper>(QuantLib::Handle<QuantLib::Quote>(boost::make_shared<QuantLib::SimpleQuote>(0.00317)),
+		QuantLib::Period(5, QuantLib::Years), calendar, QuantLib::Annual, QuantLib::ModifiedFollowing, QuantLib::Actual360(), euribor_index,
+		QuantLib::Handle<QuantLib::Quote>(), QuantLib::Period(0, QuantLib::Days), discount_curve));
+
+	rate_helpers.push_back(boost::make_shared<QuantLib::SwapRateHelper>(QuantLib::Handle<QuantLib::Quote>(boost::make_shared<QuantLib::SimpleQuote>(0.00598)),
+		QuantLib::Period(7, QuantLib::Years), calendar, QuantLib::Annual, QuantLib::ModifiedFollowing, QuantLib::Actual360(), euribor_index,
+		QuantLib::Handle<QuantLib::Quote>(), QuantLib::Period(0, QuantLib::Days), discount_curve));
+
+
+	rate_helpers.push_back(boost::make_shared<QuantLib::SwapRateHelper>(QuantLib::Handle<QuantLib::Quote>(boost::make_shared<QuantLib::SimpleQuote>(0.00966)),
+		QuantLib::Period(10, QuantLib::Years), calendar, QuantLib::Annual, QuantLib::ModifiedFollowing, QuantLib::Actual360(), euribor_index,
+		QuantLib::Handle<QuantLib::Quote>(), QuantLib::Period(0, QuantLib::Days), discount_curve));
+
+	// create euribor curve
+	auto euribor_curve = boost::make_shared<QuantLib::PiecewiseYieldCurve<QuantLib::Discount, QuantLib::LogLinear>>(0, calendar, rate_helpers, euribor_index->dayCounter());
+	euribor_curve->enableExtrapolation();
+	projection_curve.linkTo(euribor_curve);
+
+	// create seasoned vanilla swap
+	QuantLib::Date pastSettlementDate(5, QuantLib::October, 2017);
+
+	QuantLib::Schedule fixed_schedule(pastSettlementDate, pastSettlementDate + QuantLib::Period(5, QuantLib::Years), QuantLib::Period(QuantLib::Annual), 
+		calendar, QuantLib::Unadjusted, QuantLib::Unadjusted, QuantLib::DateGeneration::Backward, false);
+	QuantLib::Schedule floating_schedule(pastSettlementDate, pastSettlementDate + QuantLib::Period(5, QuantLib::Years), QuantLib::Period(QuantLib::Semiannual), 
+		calendar, QuantLib::Unadjusted, QuantLib::Unadjusted, QuantLib::DateGeneration::Backward, false);
+
+	//QuantLib::VanillaSwap swap();
+
 	return 0;
 }
 

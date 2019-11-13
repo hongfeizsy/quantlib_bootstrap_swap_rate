@@ -1,9 +1,11 @@
 #include <iostream>
 #include <map>
 #include <ql/quantlib.hpp>
+#include <boost/timer.hpp>
 #pragma warning(disable: 4819)
 
 int main() {
+	boost::timer timer;
 	QuantLib::Date today(5, QuantLib::November, 2019);
 	QuantLib::DayCounter day_counter = QuantLib::ActualActual();
 	QuantLib::Calendar calendar = QuantLib::TARGET();
@@ -102,9 +104,15 @@ int main() {
 		calendar, QuantLib::Unadjusted, QuantLib::Unadjusted, QuantLib::DateGeneration::Backward, false);
 	QuantLib::Schedule floating_schedule(pastSettlementDate, pastSettlementDate + QuantLib::Period(5, QuantLib::Years), QuantLib::Period(QuantLib::Semiannual), 
 		calendar, QuantLib::Unadjusted, QuantLib::Unadjusted, QuantLib::DateGeneration::Backward, false);
+	
+	//std::vector<QuantLib::Date>::const_iterator const_iter;
+	//for (const_iter = floating_schedule.begin(); const_iter < floating_schedule.end(); const_iter++) {
+	//	std::cout << *const_iter << std::endl;
+	//}
+	
+	QuantLib::VanillaSwap swap(QuantLib::VanillaSwap::Payer, 10000000.0, fixed_schedule, 0.0285, day_counter, floating_schedule, euribor_index, 0, day_counter);
 
-	QuantLib::VanillaSwap swap(QuantLib::VanillaSwap::Payer, 10000000.0, fixed_schedule, 0.0285, day_counter, floating_schedule, euribor_index);
-
+	std::cout << "Computing time: " << timer.elapsed() << " seconds" << std::endl;
 	return 0;
 }
 

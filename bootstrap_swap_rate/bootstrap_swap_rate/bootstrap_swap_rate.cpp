@@ -112,7 +112,7 @@ int main() {
 	
 	QuantLib::VanillaSwap swap(QuantLib::VanillaSwap::Payer, 10000000.0, fixed_schedule, 0.0285, day_counter, floating_schedule, euribor_index, 0, day_counter);
 
-	std::cout << "Computing time: " << timer.elapsed() << " seconds" << std::endl;
+	std::cout << "Computing time: " << timer.elapsed() << " seconds" << std::endl; 
 	return 0;
 }
 

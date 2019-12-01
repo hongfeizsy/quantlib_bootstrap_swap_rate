@@ -5,6 +5,111 @@
 
 int main() {
 	boost::timer timer;
+	QuantLib::Calendar calendar = QuantLib::Germany(QuantLib::Germany::FrankfurtStockExchange);
+	QuantLib::Date todayDate = QuantLib::Date(11, QuantLib::July, 2009);
+	std::cout << todayDate.weekday() << std::endl;;
+	QuantLib::Integer fixingDays = 2;
+	QuantLib::Date settlementDate = calendar.advance(todayDate, fixingDays, QuantLib::Days);   // QuantLib::Calendar::advance can produce the working day.
+	QuantLib::Settings::instance().evaluationDate() = todayDate;
+
+	std::vector<std::pair<QuantLib::Period, QuantLib::Rate>> depositQuotes = {
+		std::make_pair(QuantLib::Period(6, QuantLib::Months), 0.012680)
+	};
+
+	std::vector<std::pair<std::pair<QuantLib::Period, QuantLib::Period>, QuantLib::Rate>> fraQuotes = {
+		std::make_pair(std::make_pair(QuantLib::Period(1, QuantLib::Months), QuantLib::Period(6, QuantLib::Months)), 0.011950),
+		std::make_pair(std::make_pair(QuantLib::Period(2, QuantLib::Months), QuantLib::Period(6, QuantLib::Months)), 0.011880),
+		std::make_pair(std::make_pair(QuantLib::Period(3, QuantLib::Months), QuantLib::Period(6, QuantLib::Months)), 0.011960),
+		std::make_pair(std::make_pair(QuantLib::Period(4, QuantLib::Months), QuantLib::Period(6, QuantLib::Months)), 0.012320),
+		std::make_pair(std::make_pair(QuantLib::Period(5, QuantLib::Months), QuantLib::Period(6, QuantLib::Months)), 0.012445),
+		std::make_pair(std::make_pair(QuantLib::Period(6, QuantLib::Months), QuantLib::Period(6, QuantLib::Months)), 0.012695),
+		std::make_pair(std::make_pair(QuantLib::Period(7, QuantLib::Months), QuantLib::Period(6, QuantLib::Months)), 0.013450),
+		std::make_pair(std::make_pair(QuantLib::Period(8, QuantLib::Months), QuantLib::Period(6, QuantLib::Months)), 0.013970),
+		std::make_pair(std::make_pair(QuantLib::Period(9, QuantLib::Months), QuantLib::Period(6, QuantLib::Months)), 0.014690),
+		std::make_pair(std::make_pair(QuantLib::Period(10, QuantLib::Months), QuantLib::Period(6, QuantLib::Months)), 0.015510),
+		std::make_pair(std::make_pair(QuantLib::Period(11, QuantLib::Months), QuantLib::Period(6, QuantLib::Months)), 0.016260),
+		std::make_pair(std::make_pair(QuantLib::Period(12, QuantLib::Months), QuantLib::Period(6, QuantLib::Months)), 0.017445)
+	};
+
+	std::vector<std::pair<QuantLib::Period, QuantLib::Rate>> swapQuotes = {
+		std::make_pair(QuantLib::Period(2, QuantLib::Years), 0.016665),
+		std::make_pair(QuantLib::Period(3, QuantLib::Years), 0.021310),
+		std::make_pair(QuantLib::Period(4, QuantLib::Years), 0.024900),
+		std::make_pair(QuantLib::Period(5, QuantLib::Years), 0.027710),
+		std::make_pair(QuantLib::Period(6, QuantLib::Years), 0.030030),
+		std::make_pair(QuantLib::Period(7, QuantLib::Years), 0.031870),
+		std::make_pair(QuantLib::Period(8, QuantLib::Years), 0.033340),
+		std::make_pair(QuantLib::Period(9, QuantLib::Years), 0.034565),
+		std::make_pair(QuantLib::Period(10, QuantLib::Years), 0.035640),
+		std::make_pair(QuantLib::Period(11, QuantLib::Years), 0.036630),
+		std::make_pair(QuantLib::Period(12, QuantLib::Years), 0.037525),
+		std::make_pair(QuantLib::Period(15, QuantLib::Years), 0.039580),
+		std::make_pair(QuantLib::Period(20, QuantLib::Years), 0.040980),
+		std::make_pair(QuantLib::Period(25, QuantLib::Years), 0.040790),
+		std::make_pair(QuantLib::Period(30, QuantLib::Years), 0.040220)
+	};
+
+	QuantLib::BusinessDayConvention businessDayConvention = QuantLib::ModifiedFollowing;
+	QuantLib::DayCounter depoDayCounter = QuantLib::Actual360();
+	std::vector<boost::shared_ptr<QuantLib::RateHelper>> depoFraSwapInstruments;
+	for (size_t i = 0; i < depositQuotes.size(); i++) {
+		depoFraSwapInstruments.push_back(
+			boost::make_shared<QuantLib::DepositRateHelper>(depositQuotes[i].second, depositQuotes[i].first, fixingDays, calendar,
+				businessDayConvention, true, depoDayCounter)
+		);
+	}
+
+	QuantLib::DayCounter fraDayCounter = QuantLib::Actual360();
+	for (size_t i = 0; i < fraQuotes.size(); i++) {
+		depoFraSwapInstruments.push_back(
+			boost::make_shared<QuantLib::FraRateHelper>(fraQuotes[i].second, QuantLib::months(fraQuotes[i].first.first),
+				QuantLib::months(fraQuotes[i].first.first + fraQuotes[i].first.second), fixingDays, calendar, 
+				businessDayConvention, true, fraDayCounter
+				)
+		);
+	}
+
+	QuantLib::Frequency fixedFrequency = QuantLib::Annual;
+	QuantLib::BusinessDayConvention fixedConvention = QuantLib::ModifiedFollowing;
+	QuantLib::DayCounter fixedDayCount = QuantLib::Thirty360();
+	boost::shared_ptr<QuantLib::IborIndex> iborIndex = boost::make_shared<QuantLib::Euribor6M>();
+	QuantLib::Period fwdStart(0, QuantLib::Days);
+	for (size_t i = 0; i < swapQuotes.size(); i++) {
+		depoFraSwapInstruments.push_back(
+			boost::make_shared<QuantLib::SwapRateHelper>(swapQuotes[i].second, swapQuotes[i].first, calendar,
+				fixedFrequency, fixedConvention, fixedDayCount, iborIndex, QuantLib::Handle<QuantLib::Quote>(),
+				fwdStart)
+		);
+	}
+
+	QuantLib::DayCounter termStructureDayCounter = QuantLib::Actual360();
+	QuantLib::Real tolerence = 1.0e-15;
+	boost::shared_ptr<QuantLib::YieldTermStructure> depoFraSwapTermStructure(
+		new QuantLib::PiecewiseYieldCurve<QuantLib::Discount, QuantLib::LogLinear>(settlementDate, depoFraSwapInstruments,
+			termStructureDayCounter, tolerence)
+	);
+
+	// Check fair swap rate. Forward rate or zero rate is relatively easy to check.
+	size_t sz = 5;
+	QuantLib::RelinkableHandle<QuantLib::YieldTermStructure> ycHanle(depoFraSwapTermStructure);
+	boost::shared_ptr<QuantLib::IborIndex> euriborIndex = boost::make_shared<QuantLib::Euribor6M>(ycHanle);
+	QuantLib::VanillaSwap tmpSwap = QuantLib::MakeVanillaSwap(swapQuotes[sz].first, euriborIndex);
+	std::cout << "Fair rate of a swap: " << tmpSwap.fairRate() << std::endl;
+
+	// Price a new swap (zero NPV).
+	QuantLib::Period fixedTenor(12, QuantLib::Months);
+	QuantLib::Period floatTenor(6, QuantLib::Months);
+
+	QuantLib::RelinkableHandle<QuantLib::YieldTermStructure> discountTermStructure(depoFraSwapTermStructure);
+	boost::shared_ptr<QuantLib::PricingEngine> swapEngine =
+		boost::make_shared<QuantLib::DiscountingSwapEngine>(discountTermStructure);
+	QuantLib::VanillaSwap newSwap2evaluate = QuantLib::MakeVanillaSwap(swapQuotes[sz].first, euriborIndex,
+		swapQuotes[sz].second, 0 * QuantLib::Days).withNominal(1.0e8)
+		.withFixedLegTenor(fixedTenor)
+		.withFloatingLegTenor(floatTenor).withType(QuantLib::VanillaSwap::Payer);
+
+	newSwap2evaluate.setPricingEngine(swapEngine);
+	std::cout << "NPV of vanilla swap: " << newSwap2evaluate.NPV() << std::endl;
 
 	std::cout << "Computation time: " << timer.elapsed() << std::endl;
 	return 0;
